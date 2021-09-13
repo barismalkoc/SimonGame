@@ -5,6 +5,7 @@ let gamePattern = [];
 let counter = 0;
 let bestScore = 0;
 
+// created by BBM
 const startGame = () => {
     setGameBoard();
     addOnClicks();
