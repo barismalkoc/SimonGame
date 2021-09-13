@@ -1,9 +1,17 @@
 body {
   text-align: center;
   background-color: #011F3F;
+  position: relative;
 }
 
 #level-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 3rem;
+  margin:  5%;
+  color: #FEF2BF;
+}
+
+#best-score {
   font-family: 'Press Start 2P', cursive;
   font-size: 3rem;
   margin:  5%;
@@ -53,4 +61,32 @@ body {
 .pressed {
   box-shadow: 0 0 20px white;
   background-color: grey;
+}
+
+#opening-modal {
+  position: block;
+  position: fixed;
+  top: 37vh;
+  left: 44vw;
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  background-color: orange;
+  border: 10px solid black;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#btn {
+  font-family: 'Press Start 2P', cursive;
+  background: none;
+  border: none;
+  color: #FEF2BF;
+  text-align: center;
+  text-decoration: none;
+  
+  font-size: 20px;
+
 }

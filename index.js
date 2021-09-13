@@ -3,16 +3,19 @@ let currentLevel = 1;
 let isGameFinished = false;
 let gamePattern = [];
 let counter = 0;
+let bestScore = 0;
 
-document.addEventListener("keypress", function () {
+const startGame = () => {
     setGameBoard();
     addOnClicks();
-})
+    console.log(gamePattern)
+    document.getElementById("opening-modal").style.display = "none";
+}
 
 const setGameBoard = async () => {
     const levelTitle = document.getElementById("level-title");
     levelTitle.innerHTML = "Level : " + currentLevel;
-    setGameColours()
+    setGameColours();
     let fakeGamePattern = [...gamePattern]
     await recursion(fakeGamePattern);
     return gamePattern;
@@ -36,10 +39,12 @@ async function recursion(arr) {
     return recursion(arr);
 }
 
-
 const checkRules = (clickedValue) => {
-
+    console.log(clickedValue, gamePattern[counter]);
     if (clickedValue === gamePattern[counter]) {
+        bestScore += currentLevel;
+        const bestScoreTitle = document.getElementById("best-score")
+        bestScoreTitle.innerHTML = "Best Score : " + bestScore;
         counter++;
         if (counter === currentLevel) {
             nextLevel();
@@ -49,15 +54,19 @@ const checkRules = (clickedValue) => {
         gameOver();
     }
 
+
+
 }
 
 const gameOver = () => {
 
-    alert("Kazanamadınız Level : " + currentLevel);
+
+    getAudio("wrong");
     currentLevel = 1;
     gamePattern = [];
     counter = 0;
     setGameBoard();
+
 
 }
 
