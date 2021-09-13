@@ -1,80 +1,89 @@
-// async function recursion(arr) {
-//     if (arr.length == 0) return;
-//     await timeout(1000);
-//     console.log(arr.pop());
-//     return recursion(arr);
-// }
-
-
-// await recursion([1, 2, 3]);
-// const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-var buttonColours = ["red", "blue", "green", "yellow"];
-
-var gamePattern = [];
-var userClickedPattern = [];
-
-var started = false;
-var level = 4;
-
+const buttonColourOptions = ["red", "blue", "green", "yellow"];
+let currentLevel = 1;
+let isGameFinished = false;
+let gamePattern = [];
+let counter = 0;
 
 document.addEventListener("keypress", function () {
-    if (!started) {
-        document.getElementById("level-title").innerHTML = "Level : " + level;
-        started = true;
-        nextLevel();
-    }
+    setGameBoard();
+    addOnClicks();
 })
 
-function nextLevel() {
-    level++;
-    document.getElementById("level-title").innerHTML = "Level : " + level;
-    gamePattern = randomColourList();
-    delay(gamePattern);
-    console.log(gamePattern)
-
-}
-
-
-function delay(gamePattern) {
-    setTimeout(function () {
-        var gameColour = gamePattern.pop();
-        makeRandomColourAnimation(gameColour)
-        
-        if (gamePattern.length > 0) {
-            delay(gamePattern);
-        }
-    }, 1000
-    )
-}
-
-function makeRandomColourAnimation(gameColour) {
-
-        console.log(gameColour);
-        $("#" + gameColour).fadeIn(100).fadeOut(100).fadeIn(100);
-        playSound(gameColour); 
-    
-}
-
-function randomNumber() {
-
-    return Math.floor(Math.random() * buttonColours.length);
-
-}
-
-function randomColourList() {
-
-    gamePattern = [];
-    for (var i = 0; i < level; i++) {
-        gamePattern.push(buttonColours[randomNumber()]);
-    }
-    // console.log(gamePattern);
+const setGameBoard = async () => {
+    const levelTitle = document.getElementById("level-title");
+    levelTitle.innerHTML = "Level : " + currentLevel;
+    setGameColours()
+    let fakeGamePattern = [...gamePattern]
+    await recursion(fakeGamePattern);
     return gamePattern;
 
 }
 
-function playSound(name) {
-    var audio = new Audio("sounds/" + name + ".mp3");
-    audio.play();
+const setGameColours = () => {
+
+    for (let i = 0; i < currentLevel; i++) {
+        gamePattern[i] = buttonColourOptions[Math.floor(Math.random() * buttonColourOptions.length)];
+    }
+
+
 }
 
+const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
+async function recursion(arr) {
+    if (arr.length == 0) return;
+    await timeout(1000);
+    makeAnimation(arr.shift());
+    return recursion(arr);
+}
+
+
+const checkRules = (clickedValue) => {
+
+    if (clickedValue === gamePattern[counter]) {
+        counter++;
+        if (counter === currentLevel) {
+            nextLevel();
+        }
+    } else {
+
+        gameOver();
+    }
+
+}
+
+const gameOver = () => {
+
+    alert("Kazanamadınız Level : " + currentLevel);
+    currentLevel = 1;
+    gamePattern = [];
+    counter = 0;
+    setGameBoard();
+
+}
+
+const nextLevel = () => {
+    counter = 0;
+    currentLevel++;
+    setGameBoard();
+}
+
+const addOnClicks = () => {
+    for (let i = 0; i < 4; i++) {
+        let currentButton = document.getElementsByClassName("btn")[i];
+        currentButton.addEventListener("click", function (e) {
+            checkRules(e.target.classList[1]);
+
+        })
+    }
+}
+
+const makeAnimation = (generatedColour) => {
+
+    $("#" + generatedColour).fadeIn(100).fadeOut(100).fadeIn(100);
+    getAudio(generatedColour);
+}
+
+const getAudio = (move) => {
+    var audio = new Audio("sounds/" + move + ".mp3");
+    audio.play();
+}
